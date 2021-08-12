@@ -31,23 +31,25 @@ public class TestFrame extends Frame{
 
     @Override
     public void addWidgets(ScaledResolution resolution) {
-        getFrameContainer().getLayout().setAlignment(EnumAlignment.CENTER);
-        Button button = new Button("0"){
-            int i = 0;
-            @Override
-            public void click() {
-                super.click();
-                i++;
-                setText(i+"");
-            }
-        };
-        button.getStyle().setBackgroundColor(0xFF558833);
-        button.getStyle().setHoverBackgroundColor(0xFF447722);
-        button.setPadding(1,1,1,1);
-        add(button);
-        Label label = new Label("TAest");
-        label.getStyle().setBackgroundColor(0xFF880000);
-        label.getStyle().setHoverBackgroundColor(0xFF770000);
-        add(label);
+        getFrameContainer().getLayout().setAlignment(EnumAlignment.LEFT_TOP);
+
+        for (int i = 0; i < 70 ;i++) {
+            int finalI = i;
+            Button button = new Button(""+ finalI){
+                int j = finalI;
+                @Override
+                public void click() {
+                    super.click();
+                    j++;
+                    setText(j+"");
+                }
+            };
+            button.getStyle().setBackgroundColor(0xFF558833);
+            button.getStyle().setHoverBackgroundColor(0xFF447722);
+            button.setMargin(0,0,1,1);
+            button.setPadding(1,1,1,1);
+            add(button);
+            
+        }
     }
 }
