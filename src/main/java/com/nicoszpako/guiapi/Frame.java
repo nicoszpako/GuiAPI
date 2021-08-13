@@ -15,8 +15,8 @@ public abstract class Frame extends GuiScreen {
 
     private final Container frameContainer = new Container();
 
-
     public Frame() {
+        getFrameContainer().setFixed(true);
     }
 
     @Override
@@ -37,7 +37,7 @@ public abstract class Frame extends GuiScreen {
         ScaledResolution resolution = new ScaledResolution(Minecraft.getMinecraft());
         getFrameContainer().getGeometry().setWidth(resolution.getScaledWidth());
         getFrameContainer().getGeometry().setHeight(resolution.getScaledHeight());
-        getFrameContainer().init();
+        getFrameContainer().clear();
         addWidgets(resolution);
     }
 
@@ -51,7 +51,6 @@ public abstract class Frame extends GuiScreen {
     public void add(Widget widget){
         getFrameContainer().add(widget);
     }
-
 
     public Container getFrameContainer() {
         return frameContainer;

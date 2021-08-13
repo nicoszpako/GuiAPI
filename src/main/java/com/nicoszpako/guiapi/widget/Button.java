@@ -1,26 +1,17 @@
 package com.nicoszpako.guiapi.widget;
 
 import com.nicoszpako.guiapi.EnumMouseInteraction;
-import com.nicoszpako.guiapi.layout.EnumAlignment;
 import com.nicoszpako.guiapi.listeners.IMouseListener;
 import com.nicoszpako.guiapi.widget.container.Container;
 
-public class Button extends Widget implements IMouseListener {
-
-    private Widget innerWidget = null;
+public class Button extends Container implements IMouseListener {
 
     public Button(String text){
-        setInnerWidget(new Label(text));
+        setFixed(false);
+        setText(text);
     }
 
-    @Override
-    protected void drawContent(int mouseX, int mouseY, float partialTicks) {
-        getInnerWidget().drawContent(mouseX,mouseY,partialTicks);
-    }
-
-    @Override
-    public void init() {
-        updateDimensions();
+    public Button(){
     }
 
     public void click(){
@@ -35,22 +26,9 @@ public class Button extends Widget implements IMouseListener {
     }
 
     public void setText(String text){
-        setInnerWidget(new Label(text));
+        getWidgets().clear();
+        Label label = new Label(text);
+        add(label);
     }
 
-    public Widget getInnerWidget() {
-        return innerWidget;
-    }
-
-    public void setInnerWidget(Widget innerWidget) {
-        this.innerWidget = innerWidget;
-        updateDimensions();
-        notifyLayoutChanged();
-    }
-
-    private void updateDimensions() {
-        getInnerWidget().getGeometry().moveAt(getGeometry().getOrigin().x + getPadding().getLeft(),getGeometry().getOrigin().y + getPadding().getTop());
-        getGeometry().setWidth(getInnerWidget().getGeometry().getWidth() + getPadding().getLeft() + getPadding().getRight());
-        getGeometry().setHeight(getInnerWidget().getGeometry().getHeight() + getPadding().getTop() + getPadding().getBottom());
-    }
 }

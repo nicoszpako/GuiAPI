@@ -1,6 +1,5 @@
 package com.nicoszpako.guiapi;
 
-import javax.vecmath.Tuple2f;
 import javax.vecmath.Vector2f;
 
 public class Rectangle {
@@ -73,7 +72,7 @@ public class Rectangle {
         setBottom(getTop() + height);
     }
 
-    public void moveAt(float x, float y){
+    public void move(float x, float y){
         setRight(x + getWidth());
         setBottom(y + getHeight());
         setLeft(x);
@@ -93,7 +92,27 @@ public class Rectangle {
         return new Vector2f(getLeft(),getTop());
     }
 
-    public void moveAt(Vector2f origin) {
-        moveAt(origin.x, origin.y);
+    public void move(Vector2f origin) {
+        move(origin.x, origin.y);
     }
+
+    public void add(Vector2f vector) {
+        setLeft(getLeft() + vector.getX());
+        setTop(getTop() + vector.getY());
+        setRight(getRight() + vector.getX());
+        setBottom(getBottom() + vector.getY());
+    }
+
+    public void add(float x, float y) {
+        setLeft(getLeft() + x);
+        setTop(getTop() + y);
+        setRight(getRight() + x);
+        setBottom(getBottom() + y);
+    }
+
+    @Override
+    public String toString() {
+        return "("+left+","+top+") -> ("+right+","+bottom+")";
+    }
+
 }

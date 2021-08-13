@@ -7,6 +7,8 @@ import com.nicoszpako.guiapi.widget.container.Container;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
 
+import javax.vecmath.Vector2f;
+
 public abstract class Widget extends Gui {
 
     private Container parentContainer = null;
@@ -18,10 +20,18 @@ public abstract class Widget extends Gui {
 
     private Style style = new Style();
 
+    /**
+     * Indicates whether dimensions of this widget should adapt to it's content or container.
+     * If true, this widget's dimensions won't change except if user wants to.
+     */
+    private boolean fixed = false;
+
     public void draw(int mouseX, int mouseY, float partialTicks){
+        GlStateManager.pushMatrix();
         drawBorder(mouseX,mouseY,partialTicks);
         drawBackground(mouseX,mouseY,partialTicks);
         drawContent(mouseX,mouseY,partialTicks);
+        GlStateManager.popMatrix();
     }
 
     private void drawBackground(int mouseX, int mouseY, float partialTicks) {
@@ -120,11 +130,6 @@ public abstract class Widget extends Gui {
         setPadding(new Rectangle(left,top,right,bottom));
     }
 
-    public void notifyLayoutChanged(){
-        if(getParentContainer()!=null)
-            getParentContainer().buildLayout();
-    }
-
     public Style getStyle() {
         return style;
     }
@@ -140,4 +145,14 @@ public abstract class Widget extends Gui {
     public void setParentContainer(Container parentContainer) {
         this.parentContainer = parentContainer;
     }
+
+    public boolean isFixed() {
+        return fixed;
+    }
+
+    public void setFixed(boolean fixed) {
+        this.fixed = fixed;
+    }
+
+
 }

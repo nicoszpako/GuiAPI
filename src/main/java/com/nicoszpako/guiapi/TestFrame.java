@@ -47,7 +47,6 @@ public class TestFrame extends Frame{
             button.getStyle().setBackgroundColor(0xFF558833);
             button.getStyle().setHoverBackgroundColor(0xFF447722);
             button.setMargin(0,0,1,1);
-            button.setPadding(1,1,1,1);
             add(button);
             
         }
