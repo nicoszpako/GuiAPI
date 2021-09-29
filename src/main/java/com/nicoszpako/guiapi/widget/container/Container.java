@@ -2,6 +2,7 @@ package com.nicoszpako.guiapi.widget.container;
 
 import com.nicoszpako.guiapi.EnumMouseInteraction;
 import com.nicoszpako.guiapi.MouseState;
+import com.nicoszpako.guiapi.Rectangle;
 import com.nicoszpako.guiapi.layout.EnumAlignment;
 import com.nicoszpako.guiapi.layout.FlowLayout;
 import com.nicoszpako.guiapi.layout.Layout;
@@ -20,6 +21,8 @@ public class Container extends Widget implements IWheelListener, IMouseListener,
     private final List<Widget> widgets = new ArrayList<>();
 
     private final MouseState mouseState = new MouseState();
+
+    private Rectangle padding = new Rectangle();
 
     private Layout layout = new FlowLayout();
 
@@ -51,22 +54,21 @@ public class Container extends Widget implements IWheelListener, IMouseListener,
 
     @Override
     public void init() {
+        buildLayout();
     }
 
     public void buildLayout(){
-        if (getParentContainer() != null) {
-            getParentContainer().buildLayout();
-        }
+        System.out.println("Building layout");
         Layout layout = getLayout();
-        if(layout != null){
+        if(layout != null && !getWidgets().isEmpty()){
             layout.organise(getWidgets(), getGeometry(), getPadding());
             if(!isFixed()){
-                getGeometry().setWidth(layout.getContentSize().getWidth());
-                getGeometry().setHeight(layout.getContentSize().getHeight());
+                getGeometry().setWidth(layout.getContentSize().getWidth() + getPadding().getLeft() + getPadding().getRight());
+                getGeometry().setHeight(layout.getContentSize().getHeight() + getPadding().getLeft() + getPadding().getRight());
             }
         }
-        for(Widget widget : getWidgets()){
-            widget.init();
+        if (getParentContainer() != null) {
+            getParentContainer().buildLayout();
         }
     }
 
@@ -108,7 +110,9 @@ public class Container extends Widget implements IWheelListener, IMouseListener,
     public void add(Widget widget){
         getWidgets().add(widget);
         widget.setParentContainer(this);
+        widget.init();
         buildLayout();
+
     }
 
     public void remove(Widget widget){
@@ -137,5 +141,17 @@ public class Container extends Widget implements IWheelListener, IMouseListener,
 
     public void clear(){
         getWidgets().clear();
+    }
+
+    public Rectangle getPadding() {
+        return padding;
+    }
+
+    public void setPadding(Rectangle padding) {
+        this.padding = padding;
+    }
+
+    public void setPadding(float left, float top, float right, float bottom){
+        setPadding(new Rectangle(left,top,right,bottom));
     }
 }

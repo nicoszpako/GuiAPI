@@ -8,6 +8,7 @@ import net.minecraft.client.gui.ScaledResolution;
 import org.lwjgl.opengl.GL11;
 
 import java.io.IOException;
+import java.util.Random;
 
 public class TestFrame extends Frame{
 
@@ -32,8 +33,7 @@ public class TestFrame extends Frame{
     @Override
     public void addWidgets(ScaledResolution resolution) {
         getFrameContainer().getLayout().setAlignment(EnumAlignment.LEFT_TOP);
-
-        for (int i = 0; i < 70 ;i++) {
+        for (int i = 0; i < 700 ;i++) {
             int finalI = i;
             Button button = new Button(""+ finalI){
                 int j = finalI;
@@ -41,12 +41,15 @@ public class TestFrame extends Frame{
                 public void click() {
                     super.click();
                     j++;
-                    setText(j+"");
+                    setTextAndAdaptDimensions(j+"");
                 }
             };
-            button.getStyle().setBackgroundColor(0xFF558833);
+            button.getStyle().setBackgroundColor((new Random()).nextInt());
+            button.setBorder(3,3,3,3);
+            button.getStyle().setBorderColor(0xff0055ff);
             button.getStyle().setHoverBackgroundColor(0xFF447722);
             button.setMargin(0,0,1,1);
+            button.setPadding(2,2,2,2);
             add(button);
             
         }

@@ -6,18 +6,35 @@ import com.nicoszpako.guiapi.util.Render;
 import com.nicoszpako.guiapi.widget.container.Container;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.util.vector.Vector3f;
 
 import javax.vecmath.Vector2f;
 
 public abstract class Widget extends Gui {
 
+    /**
+     * The parent container of this widget. Null if it's a top level widget, like a frame's one.
+     */
     private Container parentContainer = null;
 
+    /**
+     * The geometrical dimensions of this widget. Allows defining what space this widget is going to cover on the screen, and how it will behave.
+     */
     private Rectangle geometry = new Rectangle();
     private Rectangle margin = new Rectangle();
-    private Rectangle padding = new Rectangle();
     private Rectangle border = new Rectangle();
 
+    /**
+     * Display purposes only. Use geometry to change dimension within a container.
+     */
+    private Vector3f translation = new Vector3f(0,0,0);
+    private Vector3f scale = new Vector3f(1,1,1);
+    private Vector3f rotation = new Vector3f(0,0,0);
+
+    /**
+     * The style of this widget. Mostly defines colors
+     */
     private Style style = new Style();
 
     /**
@@ -28,6 +45,11 @@ public abstract class Widget extends Gui {
 
     public void draw(int mouseX, int mouseY, float partialTicks){
         GlStateManager.pushMatrix();
+        GlStateManager.translate(translation.x,translation.y,translation.z);
+        GlStateManager.rotate(rotation.x,1,0,0);
+        GlStateManager.rotate(rotation.y,0,1,0);
+        GlStateManager.rotate(rotation.z,0,0,1);
+        GlStateManager.scale(scale.x,scale.y,scale.z);
         drawBorder(mouseX,mouseY,partialTicks);
         drawBackground(mouseX,mouseY,partialTicks);
         drawContent(mouseX,mouseY,partialTicks);
@@ -52,6 +74,7 @@ public abstract class Widget extends Gui {
         Render.color(getGeometry().isPointInsideExpandedRectangle(getBorder(), mouseX, mouseY) ?
                 getStyle().getHoverBorderColor() :
                 getStyle().getBorderColor());
+        GL11.glColor4f(1,1,1,0.4f);
         // top border
         Render.rect(x, y - getBorder().getTop(), getGeometry().getWidth(), getBorder().getTop());
         // bottom border
@@ -68,6 +91,7 @@ public abstract class Widget extends Gui {
         Render.rect(x - getBorder().getLeft(), y + getGeometry().getHeight(), getBorder().getLeft(), getBorder().getBottom());
         // bottom right corner border
         Render.rect(x + getGeometry().getWidth(), y + getGeometry().getHeight(), getBorder().getRight(), getBorder().getBottom());
+        GL11.glColor4f(1,1,1,1f);
 
         GlStateManager.popMatrix();
     }
@@ -81,6 +105,10 @@ public abstract class Widget extends Gui {
     protected abstract void drawContent(int mouseX, int mouseY, float partialTicks);
 
     public abstract void init();
+
+    public boolean isMouseOnWidget(int mouseX,int mouseY){
+        return getGeometry().isPointInsideExpandedRectangle(getBorder(),mouseX,mouseY);
+    }
 
     public Rectangle getGeometry() {
         return geometry;
@@ -96,14 +124,6 @@ public abstract class Widget extends Gui {
 
     public void setMargin(Rectangle margin) {
         this.margin = margin;
-    }
-
-    public Rectangle getPadding() {
-        return padding;
-    }
-
-    public void setPadding(Rectangle padding) {
-        this.padding = padding;
     }
 
     public Rectangle getBorder() {
@@ -122,12 +142,8 @@ public abstract class Widget extends Gui {
         setMargin(new Rectangle(left,top,right,bottom));
     }
 
-    public void setPadding(float left, float top, float right, float bottom){
-        setPadding(new Rectangle(left,top,right,bottom));
-    }
-
     public void setBorder(float left, float top, float right, float bottom){
-        setPadding(new Rectangle(left,top,right,bottom));
+        setBorder(new Rectangle(left,top,right,bottom));
     }
 
     public Style getStyle() {
@@ -154,5 +170,31 @@ public abstract class Widget extends Gui {
         this.fixed = fixed;
     }
 
+    public Vector3f getTranslation() {
+        return translation;
+    }
 
+    public void setTranslation(Vector3f translation) {
+        this.translation = translation;
+    }
+
+    public Vector3f getScale() {
+        return scale;
+    }
+
+    public void setScale(Vector3f scale) {
+        this.scale = scale;
+    }
+
+    public Vector3f getRotation() {
+        return rotation;
+    }
+
+    public void setRotation(Vector3f rotation) {
+        this.rotation = rotation;
+    }
+
+    public void scale(float scale){
+        setScale(new Vector3f(scale,scale,1));
+    }
 }
