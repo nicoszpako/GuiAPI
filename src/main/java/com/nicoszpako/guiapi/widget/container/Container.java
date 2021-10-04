@@ -58,7 +58,6 @@ public class Container extends Widget implements IWheelListener, IMouseListener,
     }
 
     public void buildLayout(){
-        System.out.println("Building layout");
         Layout layout = getLayout();
         if(layout != null && !getWidgets().isEmpty()){
             layout.organise(getWidgets(), getGeometry(), getPadding());

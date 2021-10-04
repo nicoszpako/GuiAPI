@@ -2,6 +2,7 @@ package com.nicoszpako.guiapi.widget;
 
 import com.nicoszpako.guiapi.EnumMouseInteraction;
 import com.nicoszpako.guiapi.listeners.IMouseListener;
+import com.nicoszpako.guiapi.util.Render;
 import com.nicoszpako.guiapi.widget.container.Container;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -10,8 +11,11 @@ public class Button extends Container implements IMouseListener {
 
     private String text = "";
 
+    private IMouseListener action;
+
     public Button(String text){
-        this(text,Minecraft.getMinecraft().fontRenderer.getStringWidth(text)+3,Minecraft.getMinecraft().fontRenderer.FONT_HEIGHT+2);
+        setText(text);
+        adaptDimensionsToText();
     }
 
     public Button(String text, float width, float height){
@@ -33,8 +37,9 @@ public class Button extends Container implements IMouseListener {
     @Override
     protected void drawContent(int mouseX, int mouseY, float partialTicks) {
         GlStateManager.pushMatrix();
-        GlStateManager.translate(getGeometry().getLeft()+1, getGeometry().getTop()+1,0);
-        Minecraft.getMinecraft().fontRenderer.drawString(getText(),1,1, isMouseOnWidget(mouseX,mouseY) ? getStyle().getColor() : getStyle().getHoverColor());
+        GlStateManager.translate(getGeometry().getLeft(), getGeometry().getTop(),0);
+        if(!getText().isEmpty())
+            Minecraft.getMinecraft().fontRenderer.drawString(getText(),1,1, isMouseOnWidget(mouseX,mouseY) ? getStyle().getColor() : getStyle().getHoverColor());
         GlStateManager.popMatrix();
         super.drawContent(mouseX, mouseY, partialTicks);
     }
@@ -43,8 +48,8 @@ public class Button extends Container implements IMouseListener {
     }
 
     public void adaptDimensionsToText(){
-        getGeometry().setWidth(Minecraft.getMinecraft().fontRenderer.getStringWidth(text)+3);
-        getGeometry().setHeight(Minecraft.getMinecraft().fontRenderer.FONT_HEIGHT+2);
+        getGeometry().setWidth(Minecraft.getMinecraft().fontRenderer.getStringWidth(text)+1);
+        getGeometry().setHeight(Minecraft.getMinecraft().fontRenderer.FONT_HEIGHT);
         buildLayout();
     }
 
@@ -53,6 +58,8 @@ public class Button extends Container implements IMouseListener {
         if(mouseInteraction == EnumMouseInteraction.LEFT_CLICK){
             click();
         }
+        if(action != null)
+            action.mouseEvent(mouseInteraction);
     }
 
     public String getText() {
@@ -66,6 +73,14 @@ public class Button extends Container implements IMouseListener {
     public void setTextAndAdaptDimensions(String text) {
         setText(text);
         adaptDimensionsToText();
+    }
+
+    public IMouseListener getAction() {
+        return action;
+    }
+
+    public void setAction(IMouseListener action) {
+        this.action = action;
     }
 
 }
